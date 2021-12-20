@@ -1,26 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import produce from 'immer';
-import { Node } from './astar';
+import React from 'react';
+import './grid.css';
+import GridLogic from './GridLogic';
 
 export default function Grid(): JSX.Element {
-  const [grid, setGrid] = useState<Node[][]>([]);
-  const [isDrawing, setIsDrawing] = useState(true);
-  const numCols = 50;
-
-  useEffect(() => {
-    let tempGrid: Node[][] = [];
-    for (let i = 0; i < numCols; i++) {
-      tempGrid.push([]);
-    }
-
-    for (let i = 0; i < tempGrid.length; i++) {
-      for (let j = 0; j < tempGrid.length / 2; j++) {
-        let node = new Node(i, j, false);
-        tempGrid[i][j] = node;
-      }
-    }
-    setGrid(tempGrid);
-  }, []);
+  const {
+    grid,
+    startNode,
+    endNode,
+    toggleStart,
+    toggleGoal,
+    isDrawing,
+    numCols,
+    highlightNode,
+    setStart,
+    setGoal,
+    changeDrawingTool,
+    isEqualsArray,
+  } = GridLogic();
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 20px)` }}>
@@ -32,41 +28,37 @@ export default function Grid(): JSX.Element {
                 <div
                   key={j}
                   onMouseMove={(e) => {
-                    if (e.buttons == 1) {
+                    if (e.buttons === 1) {
                       if (isDrawing) {
-                        setGrid((prev) =>
-                          prev.map((el, index) => {
-                            if (i !== index) return el;
-
-                            return el.map((el2, index2) => {
-                              if (j !== index2) return el2;
-
-                              return {
-                                ...el2,
-                                isWall: true,
-                              };
-                            });
-                          })
-                        );
+                        if (!isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])) {
+                          if (!isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])) {
+                            highlightNode(i, j, true);
+                          }
+                        }
                       } else {
-                        setGrid((prev) =>
-                          prev.map((el, index) => {
-                            if (i !== index) return el;
-
-                            return el.map((el2, index2) => {
-                              if (j !== index2) return el2;
-
-                              return {
-                                ...el2,
-                                isWall: false,
-                              };
-                            });
-                          })
-                        );
+                        highlightNode(i, j, false);
                       }
                     }
                   }}
-                  style={{ width: '20px', height: '20px', border: '1px solid black', backgroundColor: grid[i][j].isWall ? '#A9A9A9' : '#FFFFFF' }}
+                  onMouseDown={() => {
+                    if (toggleStart) {
+                      setStart([i, j]);
+                    } else if (toggleGoal) {
+                      setGoal([i, j]);
+                    }
+                  }}
+                  style={{
+                    width: '20px',
+                    height: '20px',
+                    border: '1px solid black',
+                    backgroundColor: grid[i][j].isWall
+                      ? '#A9A9A9'
+                      : isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])
+                      ? 'green'
+                      : isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])
+                      ? 'red'
+                      : 'white',
+                  }}
                 ></div>
               );
             })}
@@ -76,20 +68,36 @@ export default function Grid(): JSX.Element {
 
       <div style={{ display: 'flex' }}>
         <button
-          style={{ width: 'fit-content' }}
+          className={'grid-buttons'}
           onClick={() => {
-            setIsDrawing(true);
+            changeDrawingTool(true, false, false);
           }}
         >
           Draw Walls
         </button>
         <button
-          style={{ width: 'fit-content' }}
+          className={'grid-buttons'}
           onClick={() => {
-            setIsDrawing(false);
+            changeDrawingTool(false, false, false);
           }}
         >
           Erase
+        </button>
+        <button
+          className={'grid-buttons'}
+          onClick={() => {
+            changeDrawingTool(false, true, false);
+          }}
+        >
+          Set Start
+        </button>
+        <button
+          className={'grid-buttons'}
+          onClick={() => {
+            changeDrawingTool(false, false, true);
+          }}
+        >
+          Set Goal
         </button>
       </div>
     </div>
