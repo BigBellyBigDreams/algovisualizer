@@ -1,6 +1,7 @@
 import React from 'react';
 import './grid.css';
 import GridLogic from './GridLogic';
+import { isEqualsArray } from './helpers';
 
 export default function Grid(): JSX.Element {
   const {
@@ -11,11 +12,16 @@ export default function Grid(): JSX.Element {
     toggleGoal,
     isDrawing,
     numCols,
-    highlightNode,
+    isWalked,
+    isPath,
     setStart,
     setGoal,
     changeDrawingTool,
-    isEqualsArray,
+    createWall,
+    deleteWall,
+    isWall,
+    clearGrid,
+    pathfind,
   } = GridLogic();
 
   return (
@@ -29,21 +35,25 @@ export default function Grid(): JSX.Element {
                   key={j}
                   onMouseMove={(e) => {
                     if (e.buttons === 1) {
-                      if (isDrawing) {
-                        if (!isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])) {
-                          if (!isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])) {
-                            highlightNode(i, j, true);
+                      if (!toggleStart) {
+                        if (!toggleGoal) {
+                          if (isDrawing) {
+                            if (!isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])) {
+                              if (!isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])) {
+                                createWall(i, j);
+                              }
+                            }
+                          } else {
+                            deleteWall(i, j);
                           }
                         }
-                      } else {
-                        highlightNode(i, j, false);
                       }
                     }
                   }}
                   onMouseDown={() => {
-                    if (toggleStart) {
+                    if (toggleStart && !isWall(i, j)) {
                       setStart([i, j]);
-                    } else if (toggleGoal) {
+                    } else if (toggleGoal && !isWall(i, j)) {
                       setGoal([i, j]);
                     }
                   }}
@@ -51,12 +61,16 @@ export default function Grid(): JSX.Element {
                     width: '20px',
                     height: '20px',
                     border: '1px solid black',
-                    backgroundColor: grid[i][j].isWall
+                    backgroundColor: isWall(i, j)
                       ? '#A9A9A9'
                       : isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])
                       ? 'green'
                       : isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])
                       ? 'red'
+                      : isPath(i, j)
+                      ? 'pink'
+                      : isWalked(i, j)
+                      ? 'blue'
                       : 'white',
                   }}
                 ></div>
@@ -98,6 +112,23 @@ export default function Grid(): JSX.Element {
           }}
         >
           Set Goal
+        </button>
+        <button
+          className={'grid-buttons'}
+          onClick={() => {
+            clearGrid();
+          }}
+        >
+          Clear Grid
+        </button>
+        <button
+          className={'grid-buttons'}
+          style={{ backgroundColor: 'green', color: 'white' }}
+          onClick={() => {
+            pathfind();
+          }}
+        >
+          Visualize!
         </button>
       </div>
     </div>
