@@ -17,52 +17,21 @@ class Node {
 
   findNearestNeighbors(grid: Node[][]) {
     let neighbors = [];
-    try {
+
+    if (this.x + 1 in grid) {
       neighbors.push(grid[this.x + 1][this.y]);
-    } catch (err) {
-      console.log(err);
     }
 
-    try {
+    if (this.x - 1 in grid) {
       neighbors.push(grid[this.x - 1][this.y]);
-    } catch (err) {
-      console.log(err);
     }
 
-    try {
+    if (this.y + 1 in grid[this.x]) {
       neighbors.push(grid[this.x][this.y + 1]);
-    } catch (err) {
-      console.log(err);
     }
 
-    try {
+    if (this.y - 1 in grid[this.x]) {
       neighbors.push(grid[this.x][this.y - 1]);
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
-      neighbors.push(grid[this.x + 1][this.y + 1]);
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
-      neighbors.push(grid[this.x - 1][this.y - 1]);
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
-      neighbors.push(grid[this.x + 1][this.y - 1]);
-    } catch (err) {
-      console.log(err);
-    }
-
-    try {
-      neighbors.push(grid[this.x - 1][this.y + 1]);
-    } catch (err) {
-      console.log(err);
     }
 
     return neighbors;
@@ -75,7 +44,7 @@ class Node {
   calculateScoreH(grid: Node[][], endNode: number[]) {
     const xDistance = (this.x - grid[endNode[0]][endNode[1]].x) ** 2;
     const yDistance = (this.y - grid[endNode[0]][endNode[1]].y) ** 2;
-    this.hScore = xDistance + yDistance;
+    this.hScore = Math.sqrt(xDistance + yDistance);
   }
 
   calculateScoreF() {

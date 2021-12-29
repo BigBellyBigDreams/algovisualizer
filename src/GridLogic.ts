@@ -48,8 +48,10 @@ export default function GridLogic() {
     setStartNode([]);
     setEndNode([]);
     setOpenList([]);
-    setWalls([]);
     setClosedList([]);
+    setPath([]);
+    setWalls([]);
+
     setGrid(tempGrid);
   }
 
@@ -65,6 +67,20 @@ export default function GridLogic() {
       }
     }
     setWalls(tempWalls);
+  }
+
+  function setStart(value: number[]) {
+    setStartNode(value);
+  }
+
+  function setGoal(value: number[]) {
+    setEndNode(value);
+  }
+
+  function changeDrawingTool(isDrawingWall: boolean, isDrawingStart: boolean, isDrawingGoal: boolean) {
+    setIsDrawing(isDrawingWall);
+    setToggleStart(isDrawingStart);
+    setToggleGoal(isDrawingGoal);
   }
 
   function isWall(row: number, col: number) {
@@ -85,20 +101,6 @@ export default function GridLogic() {
     return false;
   }
 
-  function setStart(value: number[]) {
-    setStartNode(value);
-  }
-
-  function setGoal(value: number[]) {
-    setEndNode(value);
-  }
-
-  function changeDrawingTool(isDrawingWall: boolean, isDrawingStart: boolean, isDrawingGoal: boolean) {
-    setIsDrawing(isDrawingWall);
-    setToggleStart(isDrawingStart);
-    setToggleGoal(isDrawingGoal);
-  }
-
   function isWalked(row: number, col: number) {
     for (let i = 0; i < closedList.length; i++) {
       if (isEqualsArray([closedList[i].x, closedList[i].y], [row, col])) {
@@ -111,10 +113,10 @@ export default function GridLogic() {
   function isDiscovered(neighbor: Node) {
     for (let i = 0; i < openList.length; i++) {
       if (openList[i] == neighbor) {
-        return i;
+        return true;
       }
     }
-    return -1;
+    return false;
   }
 
   function pathfind() {
@@ -157,14 +159,14 @@ export default function GridLogic() {
         neighbors[i].calculateScoreH(grid, endNode);
         neighbors[i].calculateScoreF();
 
-        const discovered = isDiscovered(neighbors[i]);
-        if (discovered >= 0) {
-          if (neighbors[i].gScore > openList[discovered].gScore) {
-            continue;
-          } else {
-            openList[discovered].parentNode = currentNode;
-            openList[discovered].calculateScoreG(currentNode);
-            openList[discovered].calculateScoreF();
+        const tentativeScoreG = currentNode.gScore;
+        if (tentativeScoreG < neighbors[i].gScore) {
+          neighbors[i].parentNode = currentNode;
+          neighbors[i].gScore = tentativeScoreG;
+          neighbors[i].fScore = tentativeScoreG + neighbors[i].hScore;
+          if (!isDiscovered(neighbors[i])) {
+            setOpenList([...openList, neighbors[i]]);
+            openList.push(neighbors[i]);
           }
         }
 
