@@ -169,10 +169,6 @@ export default function GridLogic() {
             openList.push(neighbors[i]);
           }
         }
-
-        setOpenList([...openList, neighbors[i]]);
-        openList.push(neighbors[i]);
-        neighbors[i].parentNode = currentNode;
       }
     }
 
