@@ -15,8 +15,8 @@ class Node {
     this.fScore = 0;
   }
 
-  findNearestNeighbors(grid: Node[][]) {
-    let neighbors = [];
+  public findNearestNeighbors(grid: Node[][]): Node[] {
+    let neighbors: Node[] = [];
 
     if (this.x + 1 in grid) {
       neighbors.push(grid[this.x + 1][this.y]);
@@ -37,18 +37,10 @@ class Node {
     return neighbors;
   }
 
-  calculateScoreG(currentNode: Node) {
-    this.gScore = currentNode.gScore + 1;
-  }
-
-  calculateScoreH(grid: Node[][], endNode: number[]) {
-    const xDistance = (this.x - grid[endNode[0]][endNode[1]].x) ** 2;
-    const yDistance = (this.y - grid[endNode[0]][endNode[1]].y) ** 2;
-    this.hScore = Math.sqrt(xDistance + yDistance);
-  }
-
-  calculateScoreF() {
-    this.fScore = this.gScore + this.hScore;
+  public calculateHeuristic(endNode: number[]): number {
+    const xDistance = (this.x - endNode[0]) ** 2;
+    const yDistance = (this.y - endNode[1]) ** 2;
+    return xDistance + yDistance;
   }
 }
 

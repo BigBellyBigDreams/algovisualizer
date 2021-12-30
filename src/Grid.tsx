@@ -3,7 +3,7 @@ import './grid.css';
 import GridLogic from './GridLogic';
 import { isEqualsArray } from './helpers';
 
-export default function Grid(): JSX.Element {
+export default function Grid({ algorithm }: any): JSX.Element {
   const {
     grid,
     startNode,
