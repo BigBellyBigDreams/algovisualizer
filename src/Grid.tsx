@@ -1,79 +1,67 @@
 import React from 'react';
 import './grid.css';
+import NodeComponent from './algorithms/astar/NodeComponent';
+import VertexComponent from './algorithms/dijkstras/VertexComponent';
 import GridLogic from './GridLogic';
-import { isEqualsArray } from './helpers';
+import { isWalked, isWall } from './helpers';
 
-export default function Grid({ algorithm }: any): JSX.Element {
+interface PropType {
+  algorithm: string;
+  sendGridData: (grid: any, walls: any, startNode: any, endNode: any) => void;
+  pathfind: (isWalked: any, isWall: any) => void;
+  closedList?: any;
+  path?: any;
+}
+
+export default function Grid(props: PropType): JSX.Element {
   const {
     grid,
+    walls,
     startNode,
     endNode,
     toggleStart,
     toggleGoal,
     isDrawing,
     numCols,
-    isWalked,
-    isPath,
     setStart,
     setGoal,
     changeDrawingTool,
     createWall,
     deleteWall,
-    isWall,
     clearGrid,
-    pathfind,
-  } = GridLogic();
+  } = GridLogic(props.algorithm);
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 20px)` }}>
-      {grid.map((rows, i) => {
+      {grid.map((rows, i: number) => {
         return (
-          <div key={i}>
-            {rows.map((cols, j) => {
+          <div>
+            {rows.map((cols, j: number) => {
               return (
-                <div
-                  key={j}
-                  onMouseMove={(e) => {
-                    if (e.buttons === 1) {
-                      if (!toggleStart) {
-                        if (!toggleGoal) {
-                          if (isDrawing) {
-                            if (!isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])) {
-                              if (!isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])) {
-                                createWall(i, j);
-                              }
-                            }
-                          } else {
-                            deleteWall(i, j);
-                          }
-                        }
-                      }
-                    }
-                  }}
-                  onMouseDown={() => {
-                    if (toggleStart && !isWall(i, j)) {
-                      setStart([i, j]);
-                    } else if (toggleGoal && !isWall(i, j)) {
-                      setGoal([i, j]);
-                    }
-                  }}
-                  style={{
-                    width: '20px',
-                    height: '20px',
-                    border: '1px solid black',
-                    backgroundColor: isWall(i, j)
-                      ? '#A9A9A9'
-                      : isEqualsArray(startNode, [grid[i][j].x, grid[i][j].y])
-                      ? 'green'
-                      : isEqualsArray(endNode, [grid[i][j].x, grid[i][j].y])
-                      ? 'red'
-                      : isPath(i, j)
-                      ? 'pink'
-                      : isWalked(i, j)
-                      ? 'blue'
-                      : 'white',
-                  }}
-                ></div>
+                <div>
+                  {props.algorithm === 'astar' ? (
+                    <NodeComponent
+                      key={j}
+                      grid={grid}
+                      row={i}
+                      col={j}
+                      startNode={startNode}
+                      endNode={endNode}
+                      toggleStart={toggleStart}
+                      toggleGoal={toggleGoal}
+                      isDrawing={isDrawing}
+                      path={props.path}
+                      walls={walls}
+                      closedList={props.closedList}
+                      setStart={setStart}
+                      setGoal={setGoal}
+                      createWall={createWall}
+                      deleteWall={deleteWall}
+                    />
+                  ) : (
+                    <VertexComponent />
+                  )}
+                </div>
               );
             })}
           </div>
@@ -125,7 +113,10 @@ export default function Grid({ algorithm }: any): JSX.Element {
           className={'grid-buttons'}
           style={{ backgroundColor: 'green', color: 'white' }}
           onClick={() => {
-            pathfind();
+            props.sendGridData(grid, walls, startNode, endNode);
+            if (props.algorithm === 'astar') {
+              props.pathfind(isWalked, isWall);
+            }
           }}
         >
           Visualize!
