@@ -1,3 +1,5 @@
+import { GridTiles } from './types';
+
 abstract class GridTile {
   x: number;
   y: number;
@@ -7,7 +9,7 @@ abstract class GridTile {
     this.y = y;
   }
 
-  findNearestNeighbors(grid: any) {
+  findNearestNeighbors(grid: GridTiles): any {
     let neighbors = [];
 
     if (this.x + 1 in grid) {

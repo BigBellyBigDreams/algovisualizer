@@ -1,25 +1,18 @@
 import React from 'react';
+import { Node } from './Node';
+import { GridType } from '../../types';
 import { isEqualsArray, isWalked, isWall, isPath } from '../../helpers';
 
-interface NodePropType {
-  grid: any;
-  row: any;
-  col: any;
-  startNode: any;
-  endNode: any;
-  toggleStart: any;
-  toggleGoal: any;
-  isDrawing: any;
-  path: any;
-  walls: any;
-  closedList: any;
+interface NodePropType extends GridType {
+  path: Node[];
+  closedList: Node[];
   setStart: (value: number[]) => void;
   setGoal: (value: number[]) => void;
   createWall: (row: number, col: number) => void;
   deleteWall: (row: number, col: number) => void;
 }
 
-export default function Node({
+export default function NodeComponent({
   grid,
   row,
   col,

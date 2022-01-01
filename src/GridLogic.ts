@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { isEqualsArray, isWalked, isWall, isPath } from './helpers';
+import { isEqualsArray } from './helpers';
 import { Node } from './algorithms/astar/Node';
 import { Vertex } from './algorithms/dijkstras/Vertex';
-import { GridTileMatrix } from './gridTileTypes';
+import { GridTiles } from './types';
 
 export default function GridLogic(algorithm: string) {
   const numCols = 50;
-  const [grid, setGrid] = useState<GridTileMatrix>([]);
+  const [grid, setGrid] = useState<GridTiles>([]);
   const [walls, setWalls] = useState<number[][]>([]);
   const [isDrawing, setIsDrawing] = useState(true);
   const [toggleStart, setToggleStart] = useState(false);
@@ -15,7 +15,7 @@ export default function GridLogic(algorithm: string) {
   const [endNode, setEndNode] = useState<number[]>([]);
 
   function createGrid() {
-    let tempGrid: GridTileMatrix = [];
+    let tempGrid: GridTiles = [];
     for (let i = 0; i < numCols; i++) {
       tempGrid.push([]);
     }

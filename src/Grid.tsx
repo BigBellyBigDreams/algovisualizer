@@ -3,12 +3,13 @@ import './grid.css';
 import NodeComponent from './algorithms/astar/NodeComponent';
 import VertexComponent from './algorithms/dijkstras/VertexComponent';
 import GridLogic from './GridLogic';
-import { isWalked, isWall } from './helpers';
 
 interface PropType {
   algorithm: string;
-  sendGridData: (grid: any, walls: any, startNode: any, endNode: any) => void;
-  pathfind: (isWalked: any, isWall: any) => void;
+  sendGridData: (grid: any, walls: number[][], startNode: number[], endNode: number[]) => void;
+  pathfind: () => void;
+
+  // A* Search Arrays that are visualized
   closedList?: any;
   path?: any;
 }
@@ -35,13 +36,13 @@ export default function Grid(props: PropType): JSX.Element {
     <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 20px)` }}>
       {grid.map((rows, i: number) => {
         return (
-          <div>
+          <div key={i}>
             {rows.map((cols, j: number) => {
               return (
-                <div>
+                <div key={j}>
+                  {/* Generates grid tiles based on the algorithm selected by user */}
                   {props.algorithm === 'astar' ? (
                     <NodeComponent
-                      key={j}
                       grid={grid}
                       row={i}
                       col={j}
@@ -113,10 +114,9 @@ export default function Grid(props: PropType): JSX.Element {
           className={'grid-buttons'}
           style={{ backgroundColor: 'green', color: 'white' }}
           onClick={() => {
+            // Sends state of grid to selected algorithm component and visualizes
             props.sendGridData(grid, walls, startNode, endNode);
-            if (props.algorithm === 'astar') {
-              props.pathfind(isWalked, isWall);
-            }
+            props.pathfind();
           }}
         >
           Visualize!

@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Node } from './Node';
-import { isEqualsArray } from '../../helpers';
+import { isEqualsArray, isWalked, isWall } from '../../helpers';
 
 export default function AStarLogic(algorithm: string) {
   let grid: Node[][] = [];
-  let walls: Node[] = [];
+  let walls: number[][] = [];
   let startNode: number[] = [];
   let endNode: number[] = [];
 
@@ -12,7 +12,7 @@ export default function AStarLogic(algorithm: string) {
   let [closedList, setClosedList] = useState<Node[]>([]);
   let [path, setPath] = useState<number[][]>([]);
 
-  function setParameters(gridTemplate: Node[][], wallsTemplate: Node[], startNodeTemplate: number[], endNodeTemplate: number[]) {
+  function setParameters(gridTemplate: Node[][], wallsTemplate: number[][], startNodeTemplate: number[], endNodeTemplate: number[]) {
     grid = gridTemplate;
     walls = wallsTemplate;
     startNode = startNodeTemplate;
@@ -28,13 +28,11 @@ export default function AStarLogic(algorithm: string) {
     return false;
   }
 
-  function pathfind(isWalked: any, isWall: any) {
+  function pathfind() {
     if (algorithm === 'astar') {
       let start = grid[startNode[0]][startNode[1]];
-      if (start instanceof Node) {
-        setOpenList([...openList, start]);
-        openList = [...openList, start];
-      }
+      setOpenList([...openList, start]);
+      openList = [...openList, start];
 
       const interval = setInterval(() => {
         let currentNode = openList[0];
@@ -64,7 +62,7 @@ export default function AStarLogic(algorithm: string) {
             } else {
               clearInterval(nestedInterval);
             }
-          }, 50);
+          }, 25);
         }
 
         let neighbors: Node[] = currentNode.findNearestNeighbors(grid);
@@ -92,7 +90,7 @@ export default function AStarLogic(algorithm: string) {
           clearInterval(interval);
           console.log('NO PATH');
         }
-      }, 5);
+      }, 1);
     }
   }
 

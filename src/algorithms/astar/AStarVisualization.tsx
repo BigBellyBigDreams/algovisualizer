@@ -6,7 +6,7 @@ import AStarLogic from './AStarLogic';
 export default function AStar({ algorithm }: { algorithm: string }): JSX.Element {
   const { setParameters, pathfind, closedList, path } = AStarLogic(algorithm);
 
-  function sendGridData(grid: Node[][], walls: Node[], startNode: number[], endNode: number[]) {
+  function sendGridData(grid: Node[][], walls: number[][], startNode: number[], endNode: number[]) {
     setParameters(grid, walls, startNode, endNode);
   }
 
