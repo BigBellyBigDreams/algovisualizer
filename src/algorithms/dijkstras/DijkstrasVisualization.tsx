@@ -4,15 +4,15 @@ import DijkstrasLogic from './DijkstrasLogic';
 import { Vertex } from './Vertex';
 
 export default function DijkstrasVisualization({ algorithm }: { algorithm: string }): JSX.Element {
-  const { setParameters, pathfind } = DijkstrasLogic(algorithm);
+  const { setParameters, pathfind, reset } = DijkstrasLogic(algorithm);
 
-  function sendGridData(grid: Vertex[][], walls: number[][], startNode: number[], endNode: number[]) {
-    setParameters(grid, walls, startNode, endNode);
+  function sendGridData(grid: Vertex[][], startNode: number[], endNode: number[]) {
+    setParameters(grid, startNode, endNode);
   }
 
   return (
-    <div>
-      <Grid algorithm={algorithm} sendGridData={sendGridData} pathfind={pathfind} />
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+      <Grid algorithm={algorithm} sendGridData={sendGridData} pathfind={pathfind} reset={reset} />
     </div>
   );
 }

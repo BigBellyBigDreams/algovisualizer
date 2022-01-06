@@ -3,21 +3,20 @@ import './grid.css';
 import NodeComponent from './algorithms/astar/NodeComponent';
 import VertexComponent from './algorithms/dijkstras/VertexComponent';
 import GridLogic from './GridLogic';
+import GridButtons from './components/GridButtons';
 
 interface PropType {
   algorithm: string;
-  sendGridData: (grid: any, walls: number[][], startNode: number[], endNode: number[]) => void;
+  sendGridData: (grid: any, startNode: number[], endNode: number[]) => void;
   pathfind: () => void;
+  reset: () => void;
 
-  // A* Search Arrays that are visualized
-  closedList?: any;
   path?: any;
 }
 
 export default function Grid(props: PropType): JSX.Element {
   const {
     grid,
-    walls,
     startNode,
     endNode,
     toggleStart,
@@ -33,7 +32,7 @@ export default function Grid(props: PropType): JSX.Element {
   } = GridLogic(props.algorithm);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 20px)` }}>
+    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 25px)` }}>
       {grid.map((rows, i: number) => {
         return (
           <div key={i}>
@@ -43,6 +42,8 @@ export default function Grid(props: PropType): JSX.Element {
                   {/* Generates grid tiles based on the algorithm selected by user */}
                   {props.algorithm === 'astar' ? (
                     <NodeComponent
+                      // ***FIX***
+                      //@ts-ignore
                       grid={grid}
                       row={i}
                       col={j}
@@ -52,15 +53,30 @@ export default function Grid(props: PropType): JSX.Element {
                       toggleGoal={toggleGoal}
                       isDrawing={isDrawing}
                       path={props.path}
-                      walls={walls}
-                      closedList={props.closedList}
+                      setStart={setStart}
+                      setGoal={setGoal}
+                      createWall={createWall}
+                      deleteWall={deleteWall}
+                    />
+                  ) : props.algorithm === 'dijkstra' ? (
+                    <VertexComponent
+                      // ***FIX***
+                      //@ts-ignore
+                      grid={grid}
+                      row={i}
+                      col={j}
+                      startNode={startNode}
+                      endNode={endNode}
+                      toggleStart={toggleStart}
+                      toggleGoal={toggleGoal}
+                      isDrawing={isDrawing}
                       setStart={setStart}
                       setGoal={setGoal}
                       createWall={createWall}
                       deleteWall={deleteWall}
                     />
                   ) : (
-                    <VertexComponent />
+                    'placeholder'
                   )}
                 </div>
               );
@@ -106,6 +122,7 @@ export default function Grid(props: PropType): JSX.Element {
           className={'grid-buttons'}
           onClick={() => {
             clearGrid();
+            props.reset();
           }}
         >
           Clear Grid
@@ -115,7 +132,8 @@ export default function Grid(props: PropType): JSX.Element {
           style={{ backgroundColor: 'green', color: 'white' }}
           onClick={() => {
             // Sends state of grid to selected algorithm component and visualizes
-            props.sendGridData(grid, walls, startNode, endNode);
+            props.sendGridData(grid, startNode, endNode);
+            props.reset();
             props.pathfind();
           }}
         >

@@ -4,10 +4,13 @@ import { Vertex } from './algorithms/dijkstras/Vertex';
 export type GridTiles = Node[][] | Vertex[][];
 
 export interface GridType {
-  grid: GridTiles;
+  setStart: (value: number[]) => void;
+  setGoal: (value: number[]) => void;
+  createWall: (row: number, col: number) => void;
+  deleteWall: (row: number, col: number) => void;
+
   row: number;
   col: number;
-  walls: number[][];
   startNode: number[];
   endNode: number[];
   toggleStart: boolean;

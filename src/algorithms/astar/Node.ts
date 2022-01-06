@@ -5,18 +5,20 @@ class Node extends GridTile {
   gScore: number;
   hScore: number;
   fScore: number;
+  isClosed: boolean;
 
   constructor(x: number, y: number) {
     super(x, y);
     this.parentNode = null;
+    this.isClosed = false;
     this.gScore = 0;
     this.hScore = 0;
     this.fScore = 0;
   }
 
-  public calculateHeuristic(endNode: number[]): number {
-    const xDistance = (this.x - endNode[0]) ** 2;
-    const yDistance = (this.y - endNode[1]) ** 2;
+  public calculateDistance(nodePosition: number[]): number {
+    const xDistance = Math.abs(nodePosition[0] - this.x);
+    const yDistance = Math.abs(nodePosition[1] - this.y);
     return xDistance + yDistance;
   }
 }

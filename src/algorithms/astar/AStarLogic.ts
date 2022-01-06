@@ -1,55 +1,75 @@
 import React, { useState } from 'react';
 import { Node } from './Node';
-import { isEqualsArray, isWalked, isWall } from '../../helpers';
+import { isEqualsArray } from '../../helpers';
 
 export default function AStarLogic(algorithm: string) {
+  class PriorityQueue {
+    elements: Node[];
+    comparator: (a: Node, b: Node) => number;
+
+    constructor(comparator: any) {
+      this.elements = [];
+      this.comparator = comparator;
+    }
+
+    enqueue(value: Node) {
+      this.elements.push(value);
+      this.elements.sort(this.comparator);
+    }
+
+    dequeue() {
+      if (!this.elements.length) return null;
+      const value = this.elements.shift();
+      return value;
+    }
+  }
+
   let grid: Node[][] = [];
-  let walls: number[][] = [];
   let startNode: number[] = [];
   let endNode: number[] = [];
 
-  let [openList, setOpenList] = useState<Node[]>([]);
+  let openList = new PriorityQueue((a: Node, b: Node) => a.fScore - b.fScore);
   let [closedList, setClosedList] = useState<Node[]>([]);
   let [path, setPath] = useState<number[][]>([]);
 
-  function setParameters(gridTemplate: Node[][], wallsTemplate: number[][], startNodeTemplate: number[], endNodeTemplate: number[]) {
+  function setParameters(gridTemplate: Node[][], startNodeTemplate: number[], endNodeTemplate: number[]): void {
     grid = gridTemplate;
-    walls = wallsTemplate;
     startNode = startNodeTemplate;
     endNode = endNodeTemplate;
   }
 
+  function reset(): void {
+    openList.elements = [];
+    closedList = [];
+    path = [];
+    setClosedList([]);
+    setPath([]);
+
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[i].length; j++) {
+        grid[i][j].isClosed = false;
+      }
+    }
+  }
+
   function isDiscovered(neighbor: Node): boolean {
-    for (let i = 0; i < openList.length; i++) {
-      if (openList[i] === neighbor) {
+    for (let i = 0; i < openList.elements.length; i++) {
+      if (openList.elements[i] === neighbor) {
         return true;
       }
     }
     return false;
   }
 
-  function pathfind() {
+  function pathfind(): void {
     if (algorithm === 'astar') {
-      let start = grid[startNode[0]][startNode[1]];
-      setOpenList([...openList, start]);
-      openList = [...openList, start];
+      openList.enqueue(grid[startNode[0]][startNode[1]]);
 
       const interval = setInterval(() => {
-        let currentNode = openList[0];
-        let currentNodeIndex = 0;
-        for (let i = 0; i < openList.length; i++) {
-          if (openList[i].fScore < currentNode.fScore) {
-            currentNode = openList[i];
-            currentNodeIndex = i;
-          }
-        }
-
-        let tempOpenList = [...openList];
-        tempOpenList.splice(currentNodeIndex, 1);
-        openList.splice(currentNodeIndex, 1);
-        setOpenList(tempOpenList);
-        setClosedList([...closedList, currentNode]);
+        let currentNode: any = openList.dequeue();
         closedList.push(currentNode);
+        currentNode.isClosed = true;
+        setClosedList([...closedList, currentNode]);
 
         if (isEqualsArray([currentNode.x, currentNode.y], endNode)) {
           clearInterval(interval);
@@ -67,32 +87,32 @@ export default function AStarLogic(algorithm: string) {
 
         let neighbors: Node[] = currentNode.findNearestNeighbors(grid);
         for (let neighbor of neighbors) {
-          if (isWalked(neighbor.x, neighbor.y, closedList) || isWall(neighbor.x, neighbor.y, walls)) {
+          if (neighbor.isClosed || !neighbor.walkable) {
             continue;
           }
 
           const tentativeScoreG = currentNode.gScore + 1;
           if (!isDiscovered(neighbor)) {
-            setOpenList([...openList, neighbor]);
-            openList.push(neighbor);
             neighbor.gScore = tentativeScoreG;
-            neighbor.hScore = neighbor.calculateHeuristic(endNode);
-            neighbor.fScore = tentativeScoreG + neighbor.hScore;
+            neighbor.hScore = neighbor.calculateDistance(endNode);
+            neighbor.fScore = neighbor.gScore + neighbor.hScore;
             neighbor.parentNode = currentNode;
+            openList.enqueue(neighbor);
           } else if (tentativeScoreG < neighbor.gScore) {
             neighbor.gScore = tentativeScoreG;
-            neighbor.hScore = neighbor.calculateHeuristic(endNode);
-            neighbor.fScore = tentativeScoreG + neighbor.hScore;
+            neighbor.hScore = neighbor.calculateDistance(endNode);
+            neighbor.fScore = neighbor.gScore + neighbor.hScore;
             neighbor.parentNode = currentNode;
           }
         }
-        if (!openList.length) {
+
+        if (!openList.elements.length) {
           clearInterval(interval);
           console.log('NO PATH');
         }
-      }, 1);
+      }, 10);
     }
   }
 
-  return { setParameters, pathfind, closedList, path };
+  return { setParameters, pathfind, reset, closedList, path };
 }
