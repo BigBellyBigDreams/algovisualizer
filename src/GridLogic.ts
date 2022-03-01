@@ -5,7 +5,7 @@ import { Vertex } from './algorithms/dijkstras/Vertex';
 import { GridTiles } from './types';
 
 export default function GridLogic(algorithm: string) {
-  const numCols = 50;
+  const numCols = 35;
   const [grid, setGrid] = useState<GridTiles>([]);
   const [walls, setWalls] = useState<number[][]>([]);
   const [isDrawing, setIsDrawing] = useState(true);

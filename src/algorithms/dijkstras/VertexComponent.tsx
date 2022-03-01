@@ -1,10 +1,11 @@
 import React from 'react';
-import { isEqualsArray } from '../../helpers';
+import { isEqualsArray, isPath } from '../../helpers';
 import { Vertex } from './Vertex';
 import { GridType } from '../../types';
 
 interface VertexPropType extends GridType {
   grid: Vertex[][];
+  path: Vertex[];
 }
 
 export default function VertexComponent({
@@ -16,6 +17,7 @@ export default function VertexComponent({
   toggleStart,
   toggleGoal,
   isDrawing,
+  path,
   setStart,
   setGoal,
   createWall,
@@ -59,6 +61,10 @@ export default function VertexComponent({
           ? 'green'
           : isEqualsArray(endNode, [grid[row][col].x, grid[row][col].y])
           ? 'red'
+          : isPath(row, col, path)
+          ? 'pink'
+          : grid[row][col].isVisited
+          ? 'blue'
           : 'white',
       }}
     ></div>

@@ -11,7 +11,7 @@ export default function AStar({ algorithm }: { algorithm: string }): JSX.Element
   }
 
   return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+    <div>
       <Grid algorithm={algorithm} sendGridData={sendGridData} pathfind={pathfind} reset={reset} path={path} />
     </div>
   );

@@ -4,6 +4,7 @@ import Dijkstra from './algorithms/dijkstras/DijkstrasVisualization';
 
 function App(): JSX.Element {
   const [algorithm, setAlgorithm] = useState<string>('astar');
+
   return (
     <div className='App'>
       <select

@@ -1,17 +1,18 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Vertex } from './Vertex';
+import { isEqualsArray } from '../../helpers';
 
 export default function DijkstrasLogic(algorithm: string) {
   class PriorityQueue {
-    elements: Node[];
-    comparator: (a: Node, b: Node) => number;
+    elements: Vertex[];
+    comparator: (a: Vertex, b: Vertex) => number;
 
     constructor(comparator: any) {
       this.elements = [];
       this.comparator = comparator;
     }
 
-    enqueue(value: Node) {
+    enqueue(value: Vertex) {
       this.elements.push(value);
       this.elements.sort(this.comparator);
     }
@@ -27,8 +28,9 @@ export default function DijkstrasLogic(algorithm: string) {
   let startNode: number[] = [];
   let endNode: number[] = [];
 
-  let [queue, setQueue] = useState<PriorityQueue>(new PriorityQueue((a: Vertex, b: Vertex) => a.distance - b.distance));
-  let [optimizedList, setOptimizedList] = useState<Vertex[]>([]);
+  const unvisited = new PriorityQueue((a: Vertex, b: Vertex) => a.distance - b.distance);
+  const [, setVisited] = useState<Vertex>(new Vertex(0, 0));
+  let [path, setPath] = useState<number[][]>([]);
 
   function setParameters(gridTemplate: any, startNodeTemplate: number[], endNodeTemplate: number[]) {
     grid = gridTemplate;
@@ -37,15 +39,75 @@ export default function DijkstrasLogic(algorithm: string) {
   }
 
   function reset(): void {
-    setQueue(new PriorityQueue((a: Vertex, b: Vertex) => a.distance - b.distance));
-    setOptimizedList([]);
+    unvisited.elements = [];
+    path = [];
+    setPath([]);
+
+    for (let i = 0; i < grid.length; i++) {
+      for (let j = 0; j < grid[i].length; j++) {
+        grid[i][j].isVisited = false;
+        grid[i][j].distance = Infinity;
+      }
+    }
   }
 
   function pathfind(): void {
     if (algorithm === 'dijkstra') {
-      console.log('Start Algorithm!');
+      // initialize
+      grid[startNode[0]][startNode[1]].distance = 0;
+      unvisited.enqueue(grid[startNode[0]][startNode[1]]);
+
+      const interval = setInterval(() => {
+        let currentVertex = unvisited.dequeue();
+
+        if (currentVertex) {
+          const neighbors = currentVertex.findNearestNeighbors(grid);
+
+          for (let neighbor of neighbors) {
+            if (neighbor.isVisited || !neighbor.walkable) {
+              continue;
+            }
+
+            if (isEqualsArray([neighbor.x, neighbor.y], endNode)) {
+              clearInterval(interval);
+              let current = neighbor;
+              current.previous = currentVertex;
+
+              let nestedInterval = setInterval(() => {
+                // NOTE: Brute force solution until i figure out how to actually do this
+                if (isEqualsArray([current.x, current.y], startNode)) {
+                  clearInterval(nestedInterval);
+                }
+
+                if (neighbor.previous) {
+                  setPath([...path, [current.x, current.y]]);
+                  path.push([current.x, current.y]);
+                  current = current.previous;
+                } else {
+                  clearInterval(nestedInterval);
+                }
+              }, 25);
+            }
+
+            let totalDistance = currentVertex.distance + 1;
+            neighbor.distance = totalDistance;
+            neighbor.previous = currentVertex;
+            unvisited.enqueue(neighbor);
+            neighbor.isVisited = true;
+            setVisited(neighbor);
+          }
+        } else {
+          clearInterval(interval);
+          console.log('No Path!');
+        }
+
+        if (!unvisited.elements.length) {
+          clearInterval(interval);
+          console.log('No Path!');
+        }
+      }, 20);
     }
   }
 
-  return { setParameters, pathfind, reset };
+  return { setParameters, pathfind, reset, path };
 }

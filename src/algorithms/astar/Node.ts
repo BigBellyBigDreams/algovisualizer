@@ -5,11 +5,13 @@ class Node extends GridTile {
   gScore: number;
   hScore: number;
   fScore: number;
+  isDiscovered: boolean;
   isClosed: boolean;
 
   constructor(x: number, y: number) {
     super(x, y);
     this.parentNode = null;
+    this.isDiscovered = false;
     this.isClosed = false;
     this.gScore = 0;
     this.hScore = 0;

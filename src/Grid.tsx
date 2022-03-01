@@ -3,7 +3,6 @@ import './grid.css';
 import NodeComponent from './algorithms/astar/NodeComponent';
 import VertexComponent from './algorithms/dijkstras/VertexComponent';
 import GridLogic from './GridLogic';
-import GridButtons from './components/GridButtons';
 
 interface PropType {
   algorithm: string;
@@ -32,60 +31,70 @@ export default function Grid(props: PropType): JSX.Element {
   } = GridLogic(props.algorithm);
 
   return (
-    <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 25px)` }}>
-      {grid.map((rows, i: number) => {
-        return (
-          <div key={i}>
-            {rows.map((cols, j: number) => {
-              return (
-                <div key={j}>
-                  {/* Generates grid tiles based on the algorithm selected by user */}
-                  {props.algorithm === 'astar' ? (
-                    <NodeComponent
-                      // ***FIX***
-                      //@ts-ignore
-                      grid={grid}
-                      row={i}
-                      col={j}
-                      startNode={startNode}
-                      endNode={endNode}
-                      toggleStart={toggleStart}
-                      toggleGoal={toggleGoal}
-                      isDrawing={isDrawing}
-                      path={props.path}
-                      setStart={setStart}
-                      setGoal={setGoal}
-                      createWall={createWall}
-                      deleteWall={deleteWall}
-                    />
-                  ) : props.algorithm === 'dijkstra' ? (
-                    <VertexComponent
-                      // ***FIX***
-                      //@ts-ignore
-                      grid={grid}
-                      row={i}
-                      col={j}
-                      startNode={startNode}
-                      endNode={endNode}
-                      toggleStart={toggleStart}
-                      toggleGoal={toggleGoal}
-                      isDrawing={isDrawing}
-                      setStart={setStart}
-                      setGoal={setGoal}
-                      createWall={createWall}
-                      deleteWall={deleteWall}
-                    />
-                  ) : (
-                    'placeholder'
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        );
-      })}
+    <div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: `repeat(${numCols}, 25px)`,
+          justifyContent: 'center',
+          marginTop: '5em',
+        }}
+      >
+        {grid.map((rows, i: number) => {
+          return (
+            <div key={i}>
+              {rows.map((cols, j: number) => {
+                return (
+                  <div key={j}>
+                    {/* Generates grid tiles based on the algorithm selected by user */}
+                    {props.algorithm === 'astar' ? (
+                      <NodeComponent
+                        // ***FIX***
+                        //@ts-ignore
+                        grid={grid}
+                        row={i}
+                        col={j}
+                        startNode={startNode}
+                        endNode={endNode}
+                        toggleStart={toggleStart}
+                        toggleGoal={toggleGoal}
+                        isDrawing={isDrawing}
+                        path={props.path}
+                        setStart={setStart}
+                        setGoal={setGoal}
+                        createWall={createWall}
+                        deleteWall={deleteWall}
+                      />
+                    ) : props.algorithm === 'dijkstra' ? (
+                      <VertexComponent
+                        // ***FIX***
+                        //@ts-ignore
+                        grid={grid}
+                        row={i}
+                        col={j}
+                        startNode={startNode}
+                        endNode={endNode}
+                        toggleStart={toggleStart}
+                        toggleGoal={toggleGoal}
+                        isDrawing={isDrawing}
+                        path={props.path}
+                        setStart={setStart}
+                        setGoal={setGoal}
+                        createWall={createWall}
+                        deleteWall={deleteWall}
+                      />
+                    ) : (
+                      'placeholder'
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          );
+        })}
+      </div>
 
-      <div style={{ display: 'flex' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
         <button
           className={'grid-buttons'}
           onClick={() => {

@@ -43,9 +43,6 @@ export default function NodeComponent({
             }
           }
         }
-        if (grid[row][col].isClosed) {
-          console.log(grid[row][col]);
-        }
       }}
       onMouseDown={() => {
         if (toggleStart && grid[row][col].walkable) {
@@ -68,6 +65,8 @@ export default function NodeComponent({
           ? 'pink'
           : grid[row][col].isClosed
           ? 'blue'
+          : grid[row][col].isDiscovered
+          ? 'yellow'
           : 'white',
       }}
     ></div>
