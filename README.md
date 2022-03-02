@@ -2,4 +2,8 @@
 
 ## A* Search
 
-![Imgur](https://i.imgur.com/gNG6a4q.png)
+![Imgur](https://imgur.com/cXl8iv4.png)
+
+## Dijkstras Shortest Path
+
+![Imgur](https://imgur.com/vioven3.png)
