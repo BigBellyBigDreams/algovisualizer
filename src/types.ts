@@ -1,7 +1,8 @@
 import { Node } from './algorithms/astar/Node';
 import { Vertex } from './algorithms/dijkstras/Vertex';
+import { NodeBfs } from './algorithms/bfs/NodeBfs';
 
-export type GridTiles = Node[][] | Vertex[][];
+export type GridTiles = Node[][] | Vertex[][] | NodeBfs[][];
 
 export interface GridType {
   setStart: (value: number[]) => void;

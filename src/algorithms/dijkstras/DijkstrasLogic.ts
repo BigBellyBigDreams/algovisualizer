@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Vertex } from './Vertex';
 import { isEqualsArray } from '../../helpers';
 
-export default function DijkstrasLogic(algorithm: string) {
+export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number) {
   class PriorityQueue {
     elements: Vertex[];
     comparator: (a: Vertex, b: Vertex) => number;
@@ -46,6 +46,7 @@ export default function DijkstrasLogic(algorithm: string) {
     for (let i = 0; i < grid.length; i++) {
       for (let j = 0; j < grid[i].length; j++) {
         grid[i][j].isVisited = false;
+        grid[i][j].toBeChecked = false;
         grid[i][j].distance = Infinity;
       }
     }
@@ -61,6 +62,7 @@ export default function DijkstrasLogic(algorithm: string) {
         let currentVertex = unvisited.dequeue();
 
         if (currentVertex) {
+          currentVertex.toBeChecked = false;
           const neighbors = currentVertex.findNearestNeighbors(grid);
 
           for (let neighbor of neighbors) {
@@ -94,6 +96,7 @@ export default function DijkstrasLogic(algorithm: string) {
             neighbor.previous = currentVertex;
             unvisited.enqueue(neighbor);
             neighbor.isVisited = true;
+            neighbor.toBeChecked = true;
             setVisited(neighbor);
           }
         } else {
@@ -105,7 +108,7 @@ export default function DijkstrasLogic(algorithm: string) {
           clearInterval(interval);
           console.log('No Path!');
         }
-      }, 20);
+      }, algorithmSpeed);
     }
   }
 

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Node } from './Node';
 import { isEqualsArray } from '../../helpers';
 
-export default function AStarLogic(algorithm: string) {
+export default function AStarLogic(algorithm: string, algorithmSpeed: number) {
   class PriorityQueue {
     elements: Node[];
     comparator: (a: Node, b: Node) => number;
@@ -99,9 +99,9 @@ export default function AStarLogic(algorithm: string) {
 
         if (!openList.elements.length) {
           clearInterval(interval);
-          console.log('NO PATH');
+          console.log('No Path!');
         }
-      }, 1);
+      }, algorithmSpeed);
     }
   }
 

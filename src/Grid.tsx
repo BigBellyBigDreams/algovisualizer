@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './grid.css';
-import NodeComponent from './algorithms/astar/NodeComponent';
-import VertexComponent from './algorithms/dijkstras/VertexComponent';
+import AStarNode from './algorithms/astar/AStarNode';
+import DijkstraNode from './algorithms/dijkstras/DijkstraNode';
+import BfsNode from './algorithms/bfs/BfsNode';
 import GridLogic from './GridLogic';
 
 interface PropType {
@@ -37,7 +38,7 @@ export default function Grid(props: PropType): JSX.Element {
           display: 'grid',
           gridTemplateColumns: `repeat(${numCols}, 25px)`,
           justifyContent: 'center',
-          marginTop: '5em',
+          marginTop: '1em',
         }}
       >
         {grid.map((rows, i: number) => {
@@ -46,11 +47,9 @@ export default function Grid(props: PropType): JSX.Element {
               {rows.map((cols, j: number) => {
                 return (
                   <div key={j}>
-                    {/* Generates grid tiles based on the algorithm selected by user */}
                     {props.algorithm === 'astar' ? (
-                      <NodeComponent
-                        // ***FIX***
-                        //@ts-ignore
+                      <AStarNode
+                        // @ts-ignore
                         grid={grid}
                         row={i}
                         col={j}
@@ -66,9 +65,25 @@ export default function Grid(props: PropType): JSX.Element {
                         deleteWall={deleteWall}
                       />
                     ) : props.algorithm === 'dijkstra' ? (
-                      <VertexComponent
-                        // ***FIX***
-                        //@ts-ignore
+                      <DijkstraNode
+                        // @ts-ignore
+                        grid={grid}
+                        row={i}
+                        col={j}
+                        startNode={startNode}
+                        endNode={endNode}
+                        toggleStart={toggleStart}
+                        toggleGoal={toggleGoal}
+                        isDrawing={isDrawing}
+                        path={props.path}
+                        setStart={setStart}
+                        setGoal={setGoal}
+                        createWall={createWall}
+                        deleteWall={deleteWall}
+                      />
+                    ) : props.algorithm == 'bfs' ? (
+                      <BfsNode
+                        // @ts-ignore
                         grid={grid}
                         row={i}
                         col={j}
@@ -84,7 +99,7 @@ export default function Grid(props: PropType): JSX.Element {
                         deleteWall={deleteWall}
                       />
                     ) : (
-                      'placeholder'
+                      <div>Hello World</div>
                     )}
                   </div>
                 );

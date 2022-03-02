@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { isEqualsArray } from './helpers';
 import { Node } from './algorithms/astar/Node';
 import { Vertex } from './algorithms/dijkstras/Vertex';
+import { NodeBfs } from './algorithms/bfs/NodeBfs';
 import { GridTiles } from './types';
 
 export default function GridLogic(algorithm: string) {
-  const numCols = 35;
+  const numCols = 50;
   const [grid, setGrid] = useState<GridTiles>([]);
   const [walls, setWalls] = useState<number[][]>([]);
   const [isDrawing, setIsDrawing] = useState(true);
@@ -28,6 +29,9 @@ export default function GridLogic(algorithm: string) {
           tempGrid[i][j] = GridTile;
         } else if (algorithm === 'dijkstra') {
           GridTile = new Vertex(i, j);
+          tempGrid[i][j] = GridTile;
+        } else if (algorithm === 'bfs') {
+          GridTile = new NodeBfs(i, j);
           tempGrid[i][j] = GridTile;
         }
       }

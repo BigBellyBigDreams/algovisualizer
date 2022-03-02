@@ -3,8 +3,14 @@ import Grid from '../../Grid';
 import { Node } from './Node';
 
 import AStarLogic from './AStarLogic';
-export default function AStar({ algorithm }: { algorithm: string }): JSX.Element {
-  const { setParameters, pathfind, reset, path } = AStarLogic(algorithm);
+export default function AStar({
+  algorithm,
+  algorithmSpeed,
+}: {
+  algorithm: string;
+  algorithmSpeed: number;
+}): JSX.Element {
+  const { setParameters, pathfind, reset, path } = AStarLogic(algorithm, algorithmSpeed);
 
   function sendGridData(grid: Node[][], startNode: number[], endNode: number[]) {
     setParameters(grid, startNode, endNode);
