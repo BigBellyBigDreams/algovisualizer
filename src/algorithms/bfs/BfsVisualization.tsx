@@ -1,18 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Grid from '../../grid/Grid';
 import BfsLogic from './BfsLogic';
-import { NodeBfs } from './NodeBfs';
+import { AppContext } from '../../context/myContext';
 
-export default function BfsVisualization({ algorithm, algorithmSpeed }: { algorithm: string; algorithmSpeed: number }) {
-  const { setParameters, pathfind, reset, path } = BfsLogic(algorithm, algorithmSpeed);
-
-  function sendGridData(grid: NodeBfs[][], startNode: number[], endNode: number[]) {
-    setParameters(grid, startNode, endNode);
-  }
+export default function BfsVisualization() {
+  const { algorithm, algorithmSpeed }: any = useContext(AppContext);
+  const { pathfind, reset } = BfsLogic(algorithm, algorithmSpeed);
 
   return (
     <div>
-      <Grid algorithm={algorithm} sendGridData={sendGridData} pathfind={pathfind} reset={reset} path={path} />
+      <Grid pathfind={pathfind} reset={reset} />
     </div>
   );
 }

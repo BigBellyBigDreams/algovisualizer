@@ -1,28 +1,23 @@
-import React from 'react';
-import { Node } from './Node';
+import { useContext } from 'react';
 import { GridType } from '../../types';
 import { isEqualsArray, isPath } from '../../helpers';
+import { AppContext } from '../../context/myContext';
 
-interface NodePropType extends GridType {
-  grid: Node[][];
-  path: Node[];
-}
+export default function AStarNode({ row, col }: GridType): JSX.Element {
+  const {
+    grid,
+    path,
+    startNode,
+    endNode,
+    toggleStart,
+    toggleGoal,
+    isDrawing,
+    setStart,
+    setGoal,
+    createWall,
+    deleteWall,
+  }: any = useContext(AppContext);
 
-export default function AStarNode({
-  grid,
-  row,
-  col,
-  startNode,
-  endNode,
-  toggleStart,
-  toggleGoal,
-  isDrawing,
-  path,
-  setStart,
-  setGoal,
-  createWall,
-  deleteWall,
-}: NodePropType): JSX.Element {
   return (
     <div
       onMouseMove={(e) => {

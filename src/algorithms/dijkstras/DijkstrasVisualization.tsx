@@ -1,24 +1,15 @@
-import React from 'react';
+import { useContext } from 'react';
 import Grid from '../../grid/Grid';
 import DijkstrasLogic from './DijkstrasLogic';
-import { Vertex } from './Vertex';
+import { AppContext } from '../../context/myContext';
 
-export default function DijkstrasVisualization({
-  algorithm,
-  algorithmSpeed,
-}: {
-  algorithm: string;
-  algorithmSpeed: number;
-}): JSX.Element {
-  const { setParameters, pathfind, reset, path } = DijkstrasLogic(algorithm, algorithmSpeed);
-
-  function sendGridData(grid: Vertex[][], startNode: number[], endNode: number[]) {
-    setParameters(grid, startNode, endNode);
-  }
+export default function DijkstrasVisualization(): JSX.Element {
+  const { algorithm, algorithmSpeed }: any = useContext(AppContext);
+  const { pathfind, reset } = DijkstrasLogic(algorithm, algorithmSpeed);
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-      <Grid algorithm={algorithm} sendGridData={sendGridData} pathfind={pathfind} reset={reset} path={path} />
+      <Grid pathfind={pathfind} reset={reset} />
     </div>
   );
 }

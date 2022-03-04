@@ -1,24 +1,15 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import Grid from '../../grid/Grid';
-import { Node } from './Node';
-
 import AStarLogic from './AStarLogic';
-export default function AStar({
-  algorithm,
-  algorithmSpeed,
-}: {
-  algorithm: string;
-  algorithmSpeed: number;
-}): JSX.Element {
-  const { setParameters, pathfind, reset, path } = AStarLogic(algorithm, algorithmSpeed);
+import { AppContext } from '../../context/myContext';
 
-  function sendGridData(grid: Node[][], startNode: number[], endNode: number[]) {
-    setParameters(grid, startNode, endNode);
-  }
+export default function AStar(): JSX.Element {
+  const { algorithm, algorithmSpeed }: any = useContext(AppContext);
+  const { pathfind, reset } = AStarLogic(algorithm, algorithmSpeed);
 
   return (
     <div>
-      <Grid algorithm={algorithm} sendGridData={sendGridData} pathfind={pathfind} reset={reset} path={path} />
+      <Grid pathfind={pathfind} reset={reset} />
     </div>
   );
 }

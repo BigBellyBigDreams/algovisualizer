@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Vertex } from './Vertex';
 import { isEqualsArray } from '../../helpers';
+import { AppContext } from '../../context/myContext';
 
 export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number) {
+  let { grid, path, startNode, endNode, setPath }: any = useContext(AppContext);
+
   class PriorityQueue {
     elements: Vertex[];
     comparator: (a: Vertex, b: Vertex) => number;
@@ -23,20 +26,8 @@ export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number
       return value;
     }
   }
-
-  let grid: Vertex[][] = [];
-  let startNode: number[] = [];
-  let endNode: number[] = [];
-
   const unvisited = new PriorityQueue((a: Vertex, b: Vertex) => a.distance - b.distance);
   const [, setVisited] = useState<Vertex>(new Vertex(0, 0));
-  let [path, setPath] = useState<number[][]>([]);
-
-  function setParameters(gridTemplate: any, startNodeTemplate: number[], endNodeTemplate: number[]) {
-    grid = gridTemplate;
-    startNode = startNodeTemplate;
-    endNode = endNodeTemplate;
-  }
 
   function reset(): void {
     unvisited.elements = [];
@@ -112,5 +103,5 @@ export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number
     }
   }
 
-  return { setParameters, pathfind, reset, path };
+  return { pathfind, reset };
 }

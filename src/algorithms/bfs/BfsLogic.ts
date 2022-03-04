@@ -1,8 +1,11 @@
-import React, { useState } from 'react';
+import { useState, useContext } from 'react';
 import { isEqualsArray } from '../../helpers';
 import { NodeBfs } from './NodeBfs';
+import { AppContext } from '../../context/myContext';
 
 export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
+  let { grid, path, startNode, endNode, setPath }: any = useContext(AppContext);
+
   class PriorityQueue {
     elements: NodeBfs[];
     comparator: (a: NodeBfs, b: NodeBfs) => number;
@@ -24,19 +27,8 @@ export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
     }
   }
 
-  let grid: NodeBfs[][] = [];
-  let startNode: number[] = [];
-  let endNode: number[] = [];
-
   let pq = new PriorityQueue((a: NodeBfs, b: NodeBfs) => a.heuristic - b.heuristic);
   const [, setExamined] = useState<NodeBfs>(new NodeBfs(0, 0));
-  let [path, setPath] = useState<number[][]>([]);
-
-  const setParameters = (gridTemplate: NodeBfs[][], startNodeTemplate: number[], endNodeTemplate: number[]) => {
-    grid = gridTemplate;
-    startNode = startNodeTemplate;
-    endNode = endNodeTemplate;
-  };
 
   const reset = () => {
     pq.elements = [];
@@ -88,7 +80,7 @@ export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
             }
 
             neighbor.examined = true;
-            neighbor.heuristic = neighbor.calculateHeuristic(endNode);
+            neighbor.heuristic = Math.abs(endNode[0] - neighbor.x) + Math.abs(endNode[1] - neighbor.y);
             neighbor.parent = currentNode;
             pq.enqueue(neighbor);
             setExamined(neighbor);
@@ -98,5 +90,5 @@ export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
     }
   };
 
-  return { setParameters, reset, pathfind, path };
+  return { reset, pathfind };
 }

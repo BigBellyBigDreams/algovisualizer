@@ -1,19 +1,32 @@
 import { useState, useEffect } from 'react';
-import { isEqualsArray } from '../helpers';
-import { Node } from '../algorithms/astar/Node';
-import { Vertex } from '../algorithms/dijkstras/Vertex';
-import { NodeBfs } from '../algorithms/bfs/NodeBfs';
-import { GridTiles } from '../types';
+import { GridTiles } from './types';
+import { Node } from './algorithms/astar/Node';
+import { Vertex } from './algorithms/dijkstras/Vertex';
+import { NodeBfs } from './algorithms/bfs/NodeBfs';
+import { isEqualsArray } from './helpers';
 
-export default function GridLogic(algorithm: string) {
-  const numCols = 50;
-  const [grid, setGrid] = useState<GridTiles>([]);
+export default function AppLogic() {
+  let numCols = 50;
+  let [algorithm, setAlgorithm] = useState<string>('astar');
+  let [algorithmSpeed, setAlgorithmSpeed] = useState<number>(1);
+  let [grid, setGrid] = useState<GridTiles>([]);
   let [walls, setWalls] = useState<number[][]>([]);
-  const [isDrawing, setIsDrawing] = useState(true);
-  const [toggleStart, setToggleStart] = useState(false);
-  const [toggleGoal, setToggleGoal] = useState(false);
-  const [startNode, setStartNode] = useState<number[]>([15, 13]);
-  const [endNode, setEndNode] = useState<number[]>([35, 13]);
+  let [path, setPath] = useState<number[][]>([]);
+  let [startNode, setStartNode] = useState<number[]>([15, 13]);
+  let [endNode, setEndNode] = useState<number[]>([35, 13]);
+  let [isDrawing, setIsDrawing] = useState(true);
+  let [toggleStart, setToggleStart] = useState(false);
+  let [toggleGoal, setToggleGoal] = useState(false);
+
+  useEffect(() => {
+    createGrid();
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    setPath([]);
+    path = [];
+  }, [algorithm]);
 
   function createGrid() {
     let tempGrid: GridTiles = [];
@@ -36,14 +49,10 @@ export default function GridLogic(algorithm: string) {
         }
       }
     }
+
     setGrid(tempGrid);
     setWalls([]);
   }
-
-  useEffect(() => {
-    createGrid();
-    // eslint-disable-next-line
-  }, []);
 
   function clearGrid(): void {
     createGrid();
@@ -64,6 +73,12 @@ export default function GridLogic(algorithm: string) {
     setWalls(tempWalls);
   }
 
+  function changeDrawingTool(isDrawingWall: boolean, isDrawingStart: boolean, isDrawingGoal: boolean): void {
+    setIsDrawing(isDrawingWall);
+    setToggleStart(isDrawingStart);
+    setToggleGoal(isDrawingGoal);
+  }
+
   function setStart(value: number[]): void {
     setStartNode(value);
   }
@@ -72,27 +87,39 @@ export default function GridLogic(algorithm: string) {
     setEndNode(value);
   }
 
-  function changeDrawingTool(isDrawingWall: boolean, isDrawingStart: boolean, isDrawingGoal: boolean): void {
-    setIsDrawing(isDrawingWall);
-    setToggleStart(isDrawingStart);
-    setToggleGoal(isDrawingGoal);
-  }
-
-  return {
+  let vars = {
+    algorithm,
+    algorithmSpeed,
     grid,
-    walls,
     startNode,
     endNode,
-    isDrawing,
+    walls,
     numCols,
+    path,
+    isDrawing,
     toggleStart,
     toggleGoal,
+  };
+
+  let methods = {
+    setAlgorithm,
+    setAlgorithmSpeed,
+    setGrid,
+    setStartNode,
     setStart,
     setGoal,
+    setEndNode,
+    setWalls,
+    createGrid,
+    setPath,
+    setIsDrawing,
+    setToggleGoal,
+    setToggleStart,
     changeDrawingTool,
     createWall,
     deleteWall,
     clearGrid,
-    setGrid,
   };
+
+  return { ...vars, ...methods };
 }

@@ -1,8 +1,11 @@
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { Node } from './Node';
 import { isEqualsArray } from '../../helpers';
+import { AppContext } from '../../context/myContext';
 
 export default function AStarLogic(algorithm: string, algorithmSpeed: number) {
+  let { grid, path, startNode, endNode, setPath }: any = useContext(AppContext);
+
   class PriorityQueue {
     elements: Node[];
     comparator: (a: Node, b: Node) => number;
@@ -24,20 +27,8 @@ export default function AStarLogic(algorithm: string, algorithmSpeed: number) {
     }
   }
 
-  let grid: Node[][] = [];
-  let startNode: number[] = [];
-  let endNode: number[] = [];
-
-  // used to update JSX of property change -> .isClosed
   let openList = new PriorityQueue((a: Node, b: Node) => a.fScore - b.fScore);
   let [, setClosed] = useState<Node>(new Node(0, 0));
-  let [path, setPath] = useState<number[][]>([]);
-
-  function setParameters(gridTemplate: Node[][], startNodeTemplate: number[], endNodeTemplate: number[]): void {
-    grid = gridTemplate;
-    startNode = startNodeTemplate;
-    endNode = endNodeTemplate;
-  }
 
   function reset(): void {
     openList.elements = [];
@@ -105,5 +96,5 @@ export default function AStarLogic(algorithm: string, algorithmSpeed: number) {
     }
   }
 
-  return { setParameters, pathfind, reset, path };
+  return { pathfind, reset, path };
 }

@@ -1,28 +1,23 @@
-import React from 'react';
+import { useContext } from 'react';
 import { isEqualsArray, isPath } from '../../helpers';
-import { Vertex } from './Vertex';
 import { GridType } from '../../types';
+import { AppContext } from '../../context/myContext';
 
-interface VertexPropType extends GridType {
-  grid: Vertex[][];
-  path: Vertex[];
-}
+export default function DijkstraNode({ row, col }: GridType): JSX.Element {
+  const {
+    grid,
+    path,
+    startNode,
+    endNode,
+    toggleStart,
+    toggleGoal,
+    isDrawing,
+    setStart,
+    setGoal,
+    createWall,
+    deleteWall,
+  }: any = useContext(AppContext);
 
-export default function DijkstraNode({
-  grid,
-  row,
-  col,
-  startNode,
-  endNode,
-  toggleStart,
-  toggleGoal,
-  isDrawing,
-  path,
-  setStart,
-  setGoal,
-  createWall,
-  deleteWall,
-}: VertexPropType): JSX.Element {
   return (
     <div
       onMouseMove={(e) => {

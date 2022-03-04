@@ -1,10 +1,15 @@
+import { useContext } from 'react';
+import { AppContext } from '../context/myContext';
+
 export default function GridButtons(props: any): JSX.Element {
+  let { changeDrawingTool, clearGrid }: any = useContext(AppContext);
+
   return (
     <div style={{ display: 'flex' }}>
       <button
         className={'grid-buttons'}
         onClick={() => {
-          props.changeDrawingTool(true, false, false);
+          changeDrawingTool(true, false, false);
         }}
       >
         Draw Walls
@@ -12,7 +17,7 @@ export default function GridButtons(props: any): JSX.Element {
       <button
         className={'grid-buttons'}
         onClick={() => {
-          props.changeDrawingTool(false, false, false);
+          changeDrawingTool(false, false, false);
         }}
       >
         Erase
@@ -20,7 +25,7 @@ export default function GridButtons(props: any): JSX.Element {
       <button
         className={'grid-buttons'}
         onClick={() => {
-          props.changeDrawingTool(false, true, false);
+          changeDrawingTool(false, true, false);
         }}
       >
         Set Start
@@ -28,32 +33,31 @@ export default function GridButtons(props: any): JSX.Element {
       <button
         className={'grid-buttons'}
         onClick={() => {
-          props.changeDrawingTool(false, false, true);
+          changeDrawingTool(false, false, true);
         }}
       >
         Set Goal
       </button>
+
       <button
         className={'grid-buttons'}
         onClick={() => {
-          props.clearGrid();
           props.reset();
+          clearGrid();
         }}
       >
         Clear Grid
       </button>
-      {/* <button
-    className={'grid-buttons'}
-    style={{ backgroundColor: 'green', color: 'white' }}
-    onClick={() => {
-      // Sends state of grid to selected algorithm component and visualizes
-      props.sendGridData(grid, startNode, endNode);
-      props.reset();
-      props.pathfind();
-    }}
-  >
-    Visualize!
-  </button> */}
+      <button
+        className={'grid-buttons'}
+        style={{ backgroundColor: 'green', color: 'white' }}
+        onClick={() => {
+          props.reset();
+          props.pathfind();
+        }}
+      >
+        Visualize!
+      </button>
     </div>
   );
 }

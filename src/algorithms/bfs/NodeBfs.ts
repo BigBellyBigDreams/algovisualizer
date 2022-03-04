@@ -13,12 +13,6 @@ class NodeBfs extends GridTile {
     this.nextBest = false;
     this.parent = null;
   }
-
-  public calculateHeuristic(nodePosition: number[]): number {
-    const xDistance = Math.abs(nodePosition[0] - this.x);
-    const yDistance = Math.abs(nodePosition[1] - this.y);
-    return xDistance + yDistance;
-  }
 }
 
 export { NodeBfs };
