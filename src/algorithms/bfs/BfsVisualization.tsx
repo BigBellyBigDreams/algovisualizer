@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import Grid from '../../Grid';
+import React from 'react';
+import Grid from '../../grid/Grid';
 import BfsLogic from './BfsLogic';
 import { NodeBfs } from './NodeBfs';
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import Grid from '../../Grid';
+import Grid from '../../grid/Grid';
 import DijkstrasLogic from './DijkstrasLogic';
 import { Vertex } from './Vertex';
 

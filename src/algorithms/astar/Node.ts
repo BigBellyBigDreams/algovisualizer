@@ -1,4 +1,4 @@
-import { GridTile } from '../../GridTile';
+import { GridTile } from '../../grid/GridTile';
 
 class Node extends GridTile {
   parentNode: Node | null;

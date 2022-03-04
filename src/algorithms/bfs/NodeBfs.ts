@@ -1,4 +1,4 @@
-import { GridTile } from '../../GridTile';
+import { GridTile } from '../../grid/GridTile';
 
 class NodeBfs extends GridTile {
   heuristic: number;
