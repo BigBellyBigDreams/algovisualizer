@@ -32,7 +32,6 @@ export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
 
   const reset = () => {
     pq.elements = [];
-    path = [];
     setPath([]);
 
     for (let i = 0; i < grid.length; i++) {
@@ -70,8 +69,6 @@ export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
               }
             }, 25);
           }
-
-          console.log(currentNode);
 
           const neighbors: NodeBfs[] = currentNode.findNearestNeighbors(grid);
           for (let neighbor of neighbors) {

@@ -25,7 +25,6 @@ export default function AppLogic() {
 
   useEffect(() => {
     setPath([]);
-    path = [];
   }, [algorithm]);
 
   function createGrid() {

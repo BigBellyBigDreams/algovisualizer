@@ -32,7 +32,6 @@ export default function AStarLogic(algorithm: string, algorithmSpeed: number) {
 
   function reset(): void {
     openList.elements = [];
-    path = [];
     setPath([]);
 
     for (let i = 0; i < grid.length; i++) {

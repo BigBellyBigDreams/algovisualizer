@@ -31,7 +31,6 @@ export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number
 
   function reset(): void {
     unvisited.elements = [];
-    path = [];
     setPath([]);
 
     for (let i = 0; i < grid.length; i++) {
