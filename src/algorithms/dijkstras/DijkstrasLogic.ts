@@ -65,6 +65,7 @@ export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number
             let current = neighbor;
             current.previous = currentVertex;
 
+            // eslint-disable-next-line
             let nestedInterval = setInterval(() => {
               // NOTE: Brute force solution until i figure out how to actually do this
               if (isEqualsArray([current.x, current.y], startNode)) {
