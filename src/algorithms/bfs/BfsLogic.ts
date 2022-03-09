@@ -43,48 +43,48 @@ export default function BfsLogic(algorithm: string, algorithmSpeed: number) {
   };
 
   const pathfind = () => {
-    if (algorithm === 'bfs') {
-      pq.enqueue(grid[startNode[0]][startNode[1]]);
+    setPath([]);
+    path = [];
+    pq.enqueue(grid[startNode[0]][startNode[1]]);
 
-      const interval = setInterval(() => {
-        let currentNode = pq.dequeue();
+    const interval = setInterval(() => {
+      let currentNode = pq.dequeue();
 
-        if (currentNode) {
-          currentNode.nextBest = true;
-          if (isEqualsArray([currentNode.x, currentNode.y], endNode)) {
-            clearInterval(interval);
-            let current = currentNode;
+      if (currentNode) {
+        currentNode.nextBest = true;
+        if (isEqualsArray([currentNode.x, currentNode.y], endNode)) {
+          clearInterval(interval);
+          let current = currentNode;
 
-            let nestedInterval = setInterval(() => {
-              if (isEqualsArray([current.x, current.y], startNode)) {
-                clearInterval(nestedInterval);
-              }
-
-              if (current.parent) {
-                setPath([...path, [current.x, current.y]]);
-                path.push([current.x, current.y]);
-                current = current.parent;
-              } else {
-                clearInterval(nestedInterval);
-              }
-            }, 25);
-          }
-
-          const neighbors: NodeBfs[] = currentNode.findNearestNeighbors(grid);
-          for (let neighbor of neighbors) {
-            if (neighbor.examined || !neighbor.walkable) {
-              continue;
+          let nestedInterval = setInterval(() => {
+            if (isEqualsArray([current.x, current.y], startNode)) {
+              clearInterval(nestedInterval);
             }
 
-            neighbor.examined = true;
-            neighbor.heuristic = Math.abs(endNode[0] - neighbor.x) + Math.abs(endNode[1] - neighbor.y);
-            neighbor.parent = currentNode;
-            pq.enqueue(neighbor);
-            setExamined(neighbor);
-          }
+            if (current.parent) {
+              setPath([...path, [current.x, current.y]]);
+              path.push([current.x, current.y]);
+              current = current.parent;
+            } else {
+              clearInterval(nestedInterval);
+            }
+          }, algorithmSpeed);
         }
-      }, algorithmSpeed);
-    }
+
+        const neighbors: NodeBfs[] = currentNode.findNearestNeighbors(grid);
+        for (let neighbor of neighbors) {
+          if (neighbor.examined || !neighbor.walkable) {
+            continue;
+          }
+
+          neighbor.examined = true;
+          neighbor.heuristic = Math.abs(endNode[0] - neighbor.x) + Math.abs(endNode[1] - neighbor.y);
+          neighbor.parent = currentNode;
+          pq.enqueue(neighbor);
+          setExamined(neighbor);
+        }
+      }
+    }, algorithmSpeed);
   };
 
   return { reset, pathfind };

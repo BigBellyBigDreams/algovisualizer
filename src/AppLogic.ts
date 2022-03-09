@@ -6,14 +6,14 @@ import { NodeBfs } from './algorithms/bfs/NodeBfs';
 import { isEqualsArray } from './helpers';
 
 export default function AppLogic() {
-  let numCols = 50;
+  let numCols = 55;
   let [algorithm, setAlgorithm] = useState<string>('astar');
   let [algorithmSpeed, setAlgorithmSpeed] = useState<number>(1);
   let [grid, setGrid] = useState<GridTiles>([]);
   let [walls, setWalls] = useState<number[][]>([]);
   let [path, setPath] = useState<number[][]>([]);
-  let [startNode, setStartNode] = useState<number[]>([15, 13]);
-  let [endNode, setEndNode] = useState<number[]>([35, 13]);
+  let [startNode, setStartNode] = useState<number[]>([20, 15]);
+  let [endNode, setEndNode] = useState<number[]>([40, 15]);
   let [isDrawing, setIsDrawing] = useState(true);
   let [toggleStart, setToggleStart] = useState(false);
   let [toggleGoal, setToggleGoal] = useState(false);
@@ -26,6 +26,7 @@ export default function AppLogic() {
   useEffect(() => {
     setPath([]);
     createGrid();
+    // eslint-disable-next-line
   }, [algorithm]);
 
   function createGrid() {

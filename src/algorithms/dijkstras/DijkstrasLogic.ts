@@ -43,63 +43,62 @@ export default function DijkstrasLogic(algorithm: string, algorithmSpeed: number
   }
 
   function pathfind(): void {
-    if (algorithm === 'dijkstra') {
-      // initialize
-      grid[startNode[0]][startNode[1]].distance = 0;
-      unvisited.enqueue(grid[startNode[0]][startNode[1]]);
+    setPath([]);
+    path = [];
+    grid[startNode[0]][startNode[1]].distance = 0;
+    unvisited.enqueue(grid[startNode[0]][startNode[1]]);
 
-      const interval = setInterval(() => {
-        let currentVertex = unvisited.dequeue();
+    const interval = setInterval(() => {
+      let currentVertex = unvisited.dequeue();
 
-        if (currentVertex) {
-          currentVertex.toBeChecked = false;
-          const neighbors = currentVertex.findNearestNeighbors(grid);
+      if (currentVertex) {
+        currentVertex.toBeChecked = false;
+        const neighbors = currentVertex.findNearestNeighbors(grid);
 
-          for (let neighbor of neighbors) {
-            if (neighbor.isVisited || !neighbor.walkable) {
-              continue;
-            }
-
-            if (isEqualsArray([neighbor.x, neighbor.y], endNode)) {
-              clearInterval(interval);
-              let current = neighbor;
-              current.previous = currentVertex;
-
-              let nestedInterval = setInterval(() => {
-                // NOTE: Brute force solution until i figure out how to actually do this
-                if (isEqualsArray([current.x, current.y], startNode)) {
-                  clearInterval(nestedInterval);
-                }
-
-                if (neighbor.previous) {
-                  setPath([...path, [current.x, current.y]]);
-                  path.push([current.x, current.y]);
-                  current = current.previous;
-                } else {
-                  clearInterval(nestedInterval);
-                }
-              }, 25);
-            }
-
-            let totalDistance = currentVertex.distance + 1;
-            neighbor.distance = totalDistance;
-            neighbor.previous = currentVertex;
-            unvisited.enqueue(neighbor);
-            neighbor.isVisited = true;
-            neighbor.toBeChecked = true;
-            setVisited(neighbor);
+        for (let neighbor of neighbors) {
+          if (neighbor.isVisited || !neighbor.walkable) {
+            continue;
           }
-        } else {
-          clearInterval(interval);
-          console.log('No Path!');
-        }
 
-        if (!unvisited.elements.length) {
-          clearInterval(interval);
-          console.log('No Path!');
+          if (isEqualsArray([neighbor.x, neighbor.y], endNode)) {
+            clearInterval(interval);
+            let current = neighbor;
+            current.previous = currentVertex;
+
+            let nestedInterval = setInterval(() => {
+              // NOTE: Brute force solution until i figure out how to actually do this
+              if (isEqualsArray([current.x, current.y], startNode)) {
+                clearInterval(nestedInterval);
+              }
+
+              if (neighbor.previous) {
+                setPath([...path, [current.x, current.y]]);
+                path.push([current.x, current.y]);
+                current = current.previous;
+              } else {
+                clearInterval(nestedInterval);
+              }
+            }, algorithmSpeed);
+          }
+
+          let totalDistance = currentVertex.distance + 1;
+          neighbor.distance = totalDistance;
+          neighbor.previous = currentVertex;
+          unvisited.enqueue(neighbor);
+          neighbor.isVisited = true;
+          neighbor.toBeChecked = true;
+          setVisited(neighbor);
         }
-      }, algorithmSpeed);
-    }
+      } else {
+        clearInterval(interval);
+        console.log('No Path!');
+      }
+
+      if (!unvisited.elements.length) {
+        clearInterval(interval);
+        console.log('No Path!');
+      }
+    }, algorithmSpeed);
   }
 
   return { pathfind, reset };

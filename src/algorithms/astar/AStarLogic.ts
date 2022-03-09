@@ -43,56 +43,56 @@ export default function AStarLogic(algorithm: string, algorithmSpeed: number) {
   }
 
   function pathfind(): void {
-    if (algorithm === 'astar') {
-      openList.enqueue(grid[startNode[0]][startNode[1]]);
+    setPath([]);
+    path = [];
+    openList.enqueue(grid[startNode[0]][startNode[1]]);
 
-      const interval = setInterval(() => {
-        let currentNode: any = openList.dequeue();
-        currentNode.isClosed = true;
-        setClosed(currentNode);
+    const interval = setInterval(() => {
+      let currentNode: any = openList.dequeue();
+      currentNode.isClosed = true;
+      setClosed(currentNode);
 
-        if (isEqualsArray([currentNode.x, currentNode.y], endNode)) {
-          clearInterval(interval);
-          let current = currentNode;
-          let nestedInterval = setInterval(() => {
-            if (current.parentNode) {
-              setPath([...path, [current.x, current.y]]);
-              path.push([current.x, current.y]);
-              current = current.parentNode;
-            } else {
-              clearInterval(nestedInterval);
-            }
-          }, 25);
-        }
-
-        let neighbors: Node[] = currentNode.findNearestNeighbors(grid);
-        for (let neighbor of neighbors) {
-          if (neighbor.isClosed || !neighbor.walkable) {
-            continue;
+      if (isEqualsArray([currentNode.x, currentNode.y], endNode)) {
+        clearInterval(interval);
+        let current = currentNode;
+        let nestedInterval = setInterval(() => {
+          if (current.parentNode) {
+            setPath([...path, [current.x, current.y]]);
+            path.push([current.x, current.y]);
+            current = current.parentNode;
+          } else {
+            clearInterval(nestedInterval);
           }
+        }, algorithmSpeed);
+      }
 
-          const tentativeScoreG = currentNode.gScore + 1;
-          if (!neighbor.isDiscovered) {
-            neighbor.gScore = tentativeScoreG;
-            neighbor.hScore = neighbor.calculateDistance(endNode);
-            neighbor.fScore = neighbor.gScore + neighbor.hScore;
-            neighbor.parentNode = currentNode;
-            neighbor.isDiscovered = true;
-            openList.enqueue(neighbor);
-          } else if (tentativeScoreG < neighbor.gScore) {
-            neighbor.gScore = tentativeScoreG;
-            neighbor.hScore = neighbor.calculateDistance(endNode);
-            neighbor.fScore = neighbor.gScore + neighbor.hScore;
-            neighbor.parentNode = currentNode;
-          }
+      let neighbors: Node[] = currentNode.findNearestNeighbors(grid);
+      for (let neighbor of neighbors) {
+        if (neighbor.isClosed || !neighbor.walkable) {
+          continue;
         }
 
-        if (!openList.elements.length) {
-          clearInterval(interval);
-          console.log('No Path!');
+        const tentativeScoreG = currentNode.gScore + 1;
+        if (!neighbor.isDiscovered) {
+          neighbor.gScore = tentativeScoreG;
+          neighbor.hScore = neighbor.calculateDistance(endNode);
+          neighbor.fScore = neighbor.gScore + neighbor.hScore;
+          neighbor.parentNode = currentNode;
+          neighbor.isDiscovered = true;
+          openList.enqueue(neighbor);
+        } else if (tentativeScoreG < neighbor.gScore) {
+          neighbor.gScore = tentativeScoreG;
+          neighbor.hScore = neighbor.calculateDistance(endNode);
+          neighbor.fScore = neighbor.gScore + neighbor.hScore;
+          neighbor.parentNode = currentNode;
         }
-      }, algorithmSpeed);
-    }
+      }
+
+      if (!openList.elements.length) {
+        clearInterval(interval);
+        console.log('No Path!');
+      }
+    }, algorithmSpeed);
   }
 
   return { pathfind, reset, path };

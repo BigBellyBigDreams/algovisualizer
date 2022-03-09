@@ -11,7 +11,6 @@ function isEqualsArray(arrA: number[], arrB: number[]): boolean {
   return true;
 }
 
-// Helpers for A* Search
 function isPath(row: number, col: number, path: any): boolean {
   for (let i = 0; i < path.length; i++) {
     if (isEqualsArray([path[i][0], path[i][1]], [row, col])) {
