@@ -6,14 +6,14 @@ import { NodeBfs } from './algorithms/bfs/NodeBfs';
 import { isEqualsArray } from './helpers';
 
 export default function AppLogic() {
-  let numCols = 55;
+  let numCols = 42;
   let [algorithm, setAlgorithm] = useState<string>('astar');
   let [algorithmSpeed, setAlgorithmSpeed] = useState<number>(1);
   let [grid, setGrid] = useState<GridTiles>([]);
   let [walls, setWalls] = useState<number[][]>([]);
   let [path, setPath] = useState<number[][]>([]);
-  let [startNode, setStartNode] = useState<number[]>([20, 15]);
-  let [endNode, setEndNode] = useState<number[]>([40, 15]);
+  let [startNode, setStartNode] = useState<number[]>([10, 11]);
+  let [endNode, setEndNode] = useState<number[]>([31, 11]);
   let [isDrawing, setIsDrawing] = useState(true);
   let [toggleStart, setToggleStart] = useState(false);
   let [toggleGoal, setToggleGoal] = useState(false);

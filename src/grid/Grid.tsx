@@ -28,8 +28,8 @@ export default function Grid(props: PropType): JSX.Element {
   }: any = useContext(AppContext);
 
   let GridTileStyle = {
-    width: '20px',
-    height: '20px',
+    width: '25px',
+    height: '25px',
     border: '1px solid black',
   };
 
@@ -38,7 +38,7 @@ export default function Grid(props: PropType): JSX.Element {
       <div
         style={{
           display: 'grid',
-          gridTemplateColumns: `repeat(${numCols}, 20px)`,
+          gridTemplateColumns: `repeat(${numCols}, 25px)`,
           justifyContent: 'center',
           marginTop: '2em',
         }}
